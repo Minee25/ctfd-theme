@@ -918,10 +918,12 @@
   {{ Configs.theme_header }}
 </head>
 
-<body>
+<body class="ns-site" data-route="{{ request.endpoint or '' }}">
+  <a class="visually-hidden-focusable position-fixed top-0 start-0 p-3 ns-skip-link" href="#main-content">{% trans %}Skip to content{% endtrans %}</a>
+  <div class="ns-global-grid" aria-hidden="true"></div>
   {% include "components/navbar.html" %}
 
-  <main role="main">
+  <main role="main" id="main-content">
     {% block content %}
     {% endblock %}
   </main>
@@ -931,11 +933,24 @@
 
   {% include "components/notifications.html" %}
 
+  <footer class="ns-global-footer">
+    <div class="container">
+      <div><strong>NULL//SHIFT</strong><span>UNIVERSITY CYBER SECURITY ARENA</span></div>
+      <nav aria-label="Footer"><a href="{{ url_for('views.tos') }}">{% trans %}Rules{% endtrans %}</a><i></i><a href="{{ url_for('views.privacy') }}">{% trans %}Privacy{% endtrans %}</a></nav>
+      <small>POWERED BY <a href="https://ctfd.io" rel="noopener">CTFd</a></small>
+    </div>
+  </footer>
+
   {% block scripts %}
   {{ Assets.js("assets/js/page.js") }}
   {% endblock %}
 
+  {{ Assets.js("assets/js/pixel-ui.js") }}
+
   {{ Plugins.scripts }}
+
+  {{ Assets.css("assets/scss/upgrade.scss") }}
+  {{ Assets.css("assets/scss/balance.scss") }}
 
   {{ Configs.theme_footer }}
 </body>
