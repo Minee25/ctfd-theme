@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="ns-page">
+  <div class="ns-grid-bg"></div>
+
+  <div>
+    {% include "components/errors.html" %}
+  </div>
+
+  <div x-data="ChallengeBoard" @load-challenges.window="loadChallenges()"
+    @load-challenge.window="loadChallenge($event.detail)">
+    <div x-ref="challengeWindow" id="challenge-window" class="modal fade" tabindex="-1" role="dialog" x-data=""
+      x-html="$store.challenge.data.view"></div>
+
+    <div x-show="!loaded">
+      <div class="ns-loading">
+        <i class="fas fa-circle-notch fa-spin fa-3x fa-fw spinner"></i>
+      </div>
+    </div>
+
+    <div x-show="loaded">
+      <!-- Header Section -->
+      <div class="ns-header">
+        <div>
+          <div class="ns-header-badges">
+            <div class="ns-badge ns-badge-tertiary">OPERATION 01</div>
+            <span class="ns-badge-text">Available Targets</span>
+          </div>
+          <h1 class="ns-title ns-glitch-hover" data-text="Challenges">
+            {% trans %}Challenges{% endtrans %}
+          </h1>
+        </div>
+      </div>
+
+      <!-- Category Sections with Challenge Cards -->
+      <template x-for="(category, idx) in getCategories()" :key="idx">
+        <div class="ns-category-section" :class="'ns-accent-' + (idx % 4)">
+          <div class="ns-category-header">
+            <div class="ns-category-badge" x-text="category"></div>
+          </div>
+
+          <div class="ns-challenge-grid">
+            <template x-for="(c, cidx) in getChallenges(category)" :key="c.id">
+              <div class="ns-card-wrapper">
+                <button class="ns-challenge-card" :class="[
+                        c.solved_by_me ? 'challenge-solved' : '',
+                        ...c.tags.map((tag) => `tag-${tag.value.replace(/ /g, '-')}`),
+                      ];" :value="c.id" @click="loadChallenge(c.id)">
+
+                  <div class="ns-card-top">
+                    <div class="ns-card-category" x-text="category"></div>
+                    <span class="ns-card-points">
+                      <span x-text="c.value"></span><span class="ns-pts-label">pts</span>
+                    </span>
+                  </div>
+
+                  <h3 class="ns-card-name" x-text="c.name"></h3>
+
+                  <div class="ns-card-bottom">
+                    <template x-if="c.solved_by_me">
+                      <div class="ns-card-completed">
+                        <i class="ph-bold ph-check"></i> Completed
+                      </div>
+                    </template>
+                    <template x-if="!c.solved_by_me">
+                      <div class="ns-card-arrow">
+                        <i class="ph-bold ph-arrow-right"></i>
+                      </div>
+                    </template>
+                  </div>
+
+                  <template x-if="c.solved_by_me">
+                    <div class="ns-solved-stamp">SOLVED</div>
+                  </template>
+                </button>
+              </div>
+            </template>
+          </div>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ Assets.js("assets/js/challenges.js") }}
+{% endblock %}
