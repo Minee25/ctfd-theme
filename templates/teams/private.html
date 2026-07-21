@@ -302,12 +302,6 @@
       <div class="col-md-12 px-0">
         <div class="ns-rank-panel">
           <div class="ns-terminal-bar">
-            <div class="ns-terminal-left">
-              <span class="ns-terminal-node">SYS_ROSTER // MEMBERS</span>
-              <span class="ns-terminal-secure">
-                <i class="fas fa-users"></i> SECURE
-              </span>
-            </div>
             <div class="ns-terminal-dots">
               <div class="ns-t-dot ns-t-dot-red"></div>
               <div class="ns-t-dot ns-t-dot-orange"></div>
@@ -315,24 +309,41 @@
             </div>
           </div>
           <div class="ns-rank-table-wrap">
-            <table class="ns-rank-table">
+            <style>
+              .ns-member-row:hover {
+                background: rgba(255, 255, 255, 0.05) !important;
+                box-shadow: inset 0 0 0 1px rgba(0, 229, 208, 0.3), 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+              }
+              .ns-member-row:hover .ns-agent-name {
+                color: var(--ns-cyan) !important;
+                text-shadow: 0 0 15px rgba(0, 229, 208, 0.5);
+              }
+              .ns-member-row:hover .ns-agent-avatar {
+                box-shadow: 0 0 20px rgba(0, 229, 208, 0.3) !important;
+                border-color: rgba(0, 229, 208, 0.6) !important;
+              }
+              .ns-agent-avatar {
+                transition: all 0.1s ease;
+              }
+            </style>
+            <table class="ns-rank-table w-100" style="border-collapse: separate; border-spacing: 0 8px;">
               <thead>
                 <tr>
-                  <th style="padding-left: 28px;">{% trans %}User Name{% endtrans %}</th>
-                  <th class="text-right" style="text-align: right; padding-right: 32px;">{% trans %}Score{% endtrans %}</th>
+                  <th style="padding-left: 28px; color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}User Name{% endtrans %}</th>
+                  <th class="text-right" style="text-align: right; padding-right: 32px; color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Score{% endtrans %}</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody style="border-top: none;">
               {% for member in team.members %}
-                <tr>
-                  <td>
-                    <div class="ns-agent-cell">
-                      <span class="ns-agent-avatar" style="border-color: rgba(255, 255, 255, 0.1); background: rgba(255, 255, 255, 0.05); color: var(--ns-gray-100);">
-                        <i class="fas fa-user"></i>
+                <tr class="ns-member-row" style="background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);">
+                  <td style="border: none; padding: 14px 20px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; vertical-align: middle;">
+                    <div class="ns-agent-cell d-flex align-items-center">
+                      <span class="ns-agent-avatar d-flex align-items-center justify-content-center" style="border-color: rgba(0, 229, 208, 0.3); background: linear-gradient(135deg, rgba(0, 229, 208, 0.1) 0%, rgba(0, 180, 255, 0.1) 100%); color: var(--ns-cyan); width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(0, 229, 208, 0.2); flex-shrink: 0;">
+                        <i class="fas fa-user-secret"></i>
                       </span>
-                      <span class="ns-agent-info">
-                        <span class="d-flex align-items-center gap-2">
-                          <a href="{{ url_for('users.public', user_id=member.id) }}" class="ns-agent-name text-decoration-none">
+                      <span class="ns-agent-info" style="margin-left: 16px;">
+                        <span class="d-flex align-items-center gap-2 flex-wrap">
+                          <a href="{{ url_for('users.public', user_id=member.id) }}" class="ns-agent-name text-decoration-none" style="font-weight: 600; font-size: 1.1rem; color: var(--ns-white); transition: all 0.3s ease; letter-spacing: 0.5px;">
                             {{ member.name }}
                           </a>
                           {% if team.captain_id == member.id %}
@@ -347,7 +358,9 @@
                       </span>
                     </div>
                   </td>
-                  <td class="ns-score-cell">{{ member.score }}</td>
+                  <td class="ns-score-cell" style="border: none; padding: 14px 32px 14px 16px; font-family: var(--ns-mono); font-size: 1.25rem; font-weight: 700; color: var(--ns-primary); text-align: right; vertical-align: middle; border-top-right-radius: 10px; border-bottom-right-radius: 10px;">
+                    {{ member.score }}
+                  </td>
                 </tr>
               {% endfor %}
               </tbody>
@@ -383,13 +396,7 @@
       <div class="row px-0 mx-0">
         <div class="col-md-12 px-0">
           <div class="ns-rank-panel">
-            <div class="ns-terminal-bar">
-              <div class="ns-terminal-left">
-                <span class="ns-terminal-node">SYS_DATA // SOLVES</span>
-                <span class="ns-terminal-secure">
-                  <i class="fas fa-check-circle"></i> SECURE
-                </span>
-              </div>
+            <div class="ns-terminal-bar"> 
               <div class="ns-terminal-dots">
                 <div class="ns-t-dot ns-t-dot-red"></div>
                 <div class="ns-t-dot ns-t-dot-orange"></div>
@@ -398,38 +405,54 @@
             </div>
 
             <div class="ns-rank-table-wrap">
-              <table class="ns-rank-table">
+              <style>
+                .ns-solve-row:hover {
+                  background: rgba(255, 255, 255, 0.05) !important;
+                  box-shadow: inset 0 0 0 1px rgba(0, 229, 208, 0.3), 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+                }
+                .ns-solve-row:hover .ns-agent-name {
+                  color: var(--ns-cyan) !important;
+                  text-shadow: 0 0 15px rgba(0, 229, 208, 0.5);
+                }
+                .ns-solve-row:hover .ns-agent-avatar {
+                  box-shadow: 0 0 20px rgba(0, 229, 208, 0.3) !important;
+                  border-color: rgba(0, 229, 208, 0.6) !important;
+                }
+              </style>
+              <table class="ns-rank-table w-100" style="border-collapse: separate; border-spacing: 0 8px;">
                 <thead>
                   <tr>
-                    <th style="padding-left: 28px;">{% trans %}Challenge{% endtrans %}</th>
-                    <th class="d-none d-md-table-cell text-center">{% trans %}Category{% endtrans %}</th>
-                    <th class="text-right" style="text-align: right; padding-right: 32px;">{% trans %}Value{% endtrans %}</th>
-                    <th class="text-center">{% trans %}Time{% endtrans %}</th>
+                    <th style="padding-left: 28px; color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Challenge{% endtrans %}</th>
+                    <th class="d-none d-md-table-cell text-center" style="color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Category{% endtrans %}</th>
+                    <th class="text-right" style="text-align: right; padding-right: 32px; color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Value{% endtrans %}</th>
+                    <th class="text-center" style="color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Time{% endtrans %}</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody style="border-top: none;">
                 {% for solve in solves %}
-                  <tr>
-                    <td>
-                      <div class="ns-agent-cell">
-                        <span class="ns-agent-avatar" style="border-color: rgba(0, 229, 208, 0.2); background: rgba(0, 229, 208, 0.12); color: var(--ns-cyan);">
-                          <i class="fas fa-flag"></i>
+                  <tr class="ns-solve-row" style="background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);">
+                    <td style="border: none; padding: 14px 20px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; vertical-align: middle;">
+                      <div class="ns-agent-cell d-flex align-items-center">
+                        <span class="ns-agent-avatar d-flex align-items-center justify-content-center" style="border-color: rgba(0, 229, 208, 0.3); background: linear-gradient(135deg, rgba(0, 229, 208, 0.1) 0%, rgba(0, 180, 255, 0.1) 100%); color: var(--ns-cyan); width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(0, 229, 208, 0.2); flex-shrink: 0;">
+                          <i class="fas fa-flag" style="font-size: 1.1rem;"></i>
                         </span>
-                        <span class="ns-agent-info">
-                          <a href="{{ url_for('challenges.listing') }}#{{ solve.challenge.name }}-{{ solve.challenge.id }}" class="ns-agent-name text-decoration-none">
+                        <span class="ns-agent-info" style="margin-left: 16px;">
+                          <a href="{{ url_for('challenges.listing') }}#{{ solve.challenge.name }}-{{ solve.challenge.id }}" class="ns-agent-name text-decoration-none" style="font-weight: 600; font-size: 1.1rem; color: var(--ns-white); transition: all 0.3s ease; letter-spacing: 0.5px;">
                             {{ solve.challenge.name }}
                           </a>
                         </span>
                       </div>
                     </td>
-                    <td class="d-none d-md-table-cell text-center">
-                      <span class="badge" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--ns-gray-300); font-family: var(--ns-mono); letter-spacing: 1px; font-weight: 400;">
+                    <td class="d-none d-md-table-cell text-center" style="border: none; padding: 14px 16px; vertical-align: middle;">
+                      <span class="badge" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--ns-gray-300); font-family: var(--ns-mono); letter-spacing: 1px; padding: 6px 10px; font-weight: 400; border-radius: 4px;">
                         {{ solve.challenge.category }}
                       </span>
                     </td>
-                    <td class="ns-score-cell">{{ solve.challenge.value }}</td>
-                    <td class="text-center" style="color: var(--ns-gray-500); font-family: var(--ns-mono); font-size: 0.8rem;">
-                      <span data-time="{{ solve.date | isoformat }}">{{ solve.date }}</span>
+                    <td class="ns-score-cell" style="border: none; padding: 14px 32px 14px 16px; font-family: var(--ns-mono); font-size: 1.25rem; font-weight: 700; color: var(--ns-primary); text-align: right; vertical-align: middle;">
+                      {{ solve.challenge.value }}
+                    </td>
+                    <td class="text-center" style="border: none; padding: 14px 20px 14px 16px; color: var(--ns-gray-400); font-family: var(--ns-mono); font-size: 0.85rem; border-top-right-radius: 10px; border-bottom-right-radius: 10px; vertical-align: middle;">
+                      <span data-time="{{ solve.date | isoformat }}"></span>
                     </td>
                   </tr>
                 {% endfor %}
