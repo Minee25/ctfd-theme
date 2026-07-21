@@ -55,7 +55,6 @@ export default defineConfig({
       input: {
         index: resolve(__dirname, "assets/js/index.js"),
         page: resolve(__dirname, "assets/js/page.js"),
-        pixel_ui: resolve(__dirname, "assets/js/pixel-ui.js"),
         setup: resolve(__dirname, "assets/js/setup.js"),
         settings: resolve(__dirname, "assets/js/settings.js"),
         challenges: resolve(__dirname, "assets/js/challenges.js"),
@@ -68,8 +67,6 @@ export default defineConfig({
         users_private: resolve(__dirname, "assets/js/users/private.js"),
         users_list: resolve(__dirname, "assets/js/users/list.js"),
         main: resolve(__dirname, "assets/scss/main.scss"),
-        upgrade: resolve(__dirname, "assets/scss/upgrade.scss"),
-        balance: resolve(__dirname, "assets/scss/balance.scss"),
         color_mode_switcher: resolve(__dirname, "assets/js/color_mode_switcher.js"),
       },
     },

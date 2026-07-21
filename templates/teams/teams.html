@@ -1,151 +1,602 @@
 {% extends "base.html" %}
 
+{% block stylesheets %}
+{{ super() }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Thai:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap"
+  rel="stylesheet">
+<style>
+  :root {
+    --ns-bg: #0b0e1a;
+    --ns-panel: #0f1322;
+    --ns-soft-panel: rgba(255, 255, 255, 0.02);
+    --ns-accent: #00b4ff;
+    --ns-cyan: #00e5d0;
+    --ns-pink: #ff3b7a;
+    --ns-white: #ffffff;
+    --ns-gray-100: #e5e7eb;
+    --ns-gray-300: #9ca3af;
+    --ns-gray-500: #6b7280;
+    --ns-border: rgba(255, 255, 255, 0.06);
+    --ns-body: "Space Grotesk", "Noto Sans Thai", sans-serif;
+    --ns-display: "Inter", "Noto Sans Thai", sans-serif;
+    --ns-mono: "Space Mono", monospace;
+    --ns-primary: #00b4ff;
+  }
+
+  /* ── Search Form ── */
+  .ns-search-section {
+    margin-bottom: 32px;
+    padding: 20px 28px;
+    border: 1px solid var(--ns-border);
+    border-radius: 8px;
+    background: var(--ns-soft-panel);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: ns-fade-up 0.6s ease-out 0.15s both;
+  }
+
+  .ns-search-info {
+    margin-bottom: 16px;
+    color: var(--ns-gray-300);
+    font-family: var(--ns-mono);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  .ns-search-info strong {
+    color: var(--ns-cyan);
+  }
+
+  .ns-search-meta {
+    margin-bottom: 4px;
+    color: var(--ns-gray-500);
+    font-family: var(--ns-mono);
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    text-align: center;
+  }
+
+  /* ── Rank Panel ── */
+  .ns-rank-panel {
+    overflow: hidden;
+    border: 1px solid var(--ns-border);
+    border-radius: 8px;
+    background: var(--ns-panel);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: ns-fade-up 0.6s ease-out 0.3s both;
+  }
+
+  .ns-terminal-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--ns-border);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .ns-terminal-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+  }
+
+  .ns-terminal-node,
+  .ns-terminal-secure {
+    font-family: var(--ns-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .ns-terminal-node {
+    color: var(--ns-gray-500);
+  }
+
+  .ns-terminal-secure {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--ns-cyan);
+  }
+
+  .ns-terminal-dots {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex: 0 0 auto;
+  }
+
+  .ns-t-dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+  }
+
+  .ns-t-dot-red { background: #ff5f57; }
+  .ns-t-dot-orange { background: #febc2e; }
+  .ns-t-dot-green { background: #28c840; }
+
+  /* ── Table ── */
+  .ns-rank-table-wrap {
+    overflow-x: auto;
+  }
+
+  .ns-rank-table {
+    width: 100%;
+    min-width: 680px;
+    margin: 0;
+    border-collapse: collapse;
+    color: var(--ns-gray-100);
+  }
+
+  .ns-rank-table thead th {
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--ns-border);
+    color: var(--ns-gray-500);
+    font-family: var(--ns-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2.4px;
+    text-align: left;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .ns-rank-table tbody tr {
+    position: relative;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.035);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: ns-row-in 0.35s ease-out forwards;
+    transition: background 0.25s ease;
+  }
+
+  .ns-rank-table tbody tr:last-child {
+    border-bottom: 0;
+  }
+
+  .ns-rank-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  .ns-rank-table tbody td,
+  .ns-rank-table tbody th {
+    padding: 20px 28px;
+    vertical-align: middle;
+  }
+
+  /* ── Agent Cell ── */
+  .ns-agent-cell {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .ns-agent-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    border: 1px solid rgba(0, 180, 255, 0.16);
+    border-radius: 8px;
+    background: rgba(0, 180, 255, 0.1);
+    color: var(--ns-accent);
+  }
+
+  .ns-agent-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .ns-agent-name {
+    overflow: hidden;
+    color: var(--ns-white);
+    font-family: var(--ns-body);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .ns-agent-name:hover,
+  .ns-agent-name:focus {
+    color: var(--ns-accent);
+  }
+
+  /* ── Badges ── */
+  .ns-team-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--ns-mono);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    vertical-align: middle;
+    margin-left: 8px;
+  }
+
+  .ns-team-badge-bracket {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--ns-gray-300);
+  }
+
+  .ns-team-badge-official {
+    border: 1px solid rgba(0, 180, 255, 0.3);
+    background: rgba(0, 180, 255, 0.12);
+    color: var(--ns-accent);
+    text-decoration: none;
+  }
+
+  .ns-team-badge-official:hover {
+    background: rgba(0, 180, 255, 0.2);
+    color: var(--ns-accent);
+    text-decoration: none;
+  }
+
+  /* ── Misc Cells ── */
+  .ns-cell-website {
+    width: 50px;
+    text-align: center;
+  }
+
+  .ns-cell-website a {
+    color: var(--ns-accent);
+    transition: color 0.2s ease;
+  }
+
+  .ns-cell-website a:hover {
+    color: var(--ns-cyan);
+  }
+
+  .ns-cell-affiliation,
+  .ns-cell-country {
+    color: var(--ns-gray-300);
+    font-family: var(--ns-mono);
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .ns-cell-country i {
+    margin-right: 6px;
+  }
+
+  /* ── Empty State ── */
+  .ns-empty {
+    padding: 54px 24px;
+    color: var(--ns-gray-500);
+    font-family: var(--ns-mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.4px;
+    text-align: center;
+    text-transform: uppercase;
+  }
+
+  /* ── Pagination ── */
+  .ns-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 32px;
+    padding: 20px 0;
+    animation: ns-fade-up 0.6s ease-out 0.45s both;
+  }
+
+  .ns-pagination-label {
+    color: var(--ns-gray-500);
+    font-family: var(--ns-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+  }
+
+  .ns-pagination a {
+    color: var(--ns-accent);
+    font-family: var(--ns-mono);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-decoration: none;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+  }
+
+  .ns-pagination a:hover {
+    color: var(--ns-cyan);
+    text-shadow: 0 0 10px rgba(0, 229, 208, 0.4);
+  }
+
+  .ns-pagination .page-select {
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--ns-gray-100);
+    font-family: var(--ns-mono);
+    font-size: 12px;
+  }
+
+  /* ── Animations ── */
+  @keyframes ns-row-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes ns-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(26px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .ns-search-section {
+      padding: 14px 16px;
+    }
+
+    .ns-terminal-bar {
+      padding: 12px 16px;
+    }
+
+    .ns-terminal-left {
+      gap: 10px;
+    }
+
+    .ns-terminal-node,
+    .ns-terminal-secure {
+      font-size: 9px;
+      letter-spacing: 1.4px;
+    }
+
+    .ns-rank-table {
+      min-width: 560px;
+    }
+
+    .ns-rank-table thead th {
+      padding: 14px;
+      font-size: 9px;
+    }
+
+    .ns-rank-table tbody td,
+    .ns-rank-table tbody th {
+      padding: 14px;
+    }
+
+    .ns-agent-avatar {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ns-terminal-left {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+
+    .ns-terminal-secure {
+      display: none;
+    }
+
+    .ns-rank-table {
+      min-width: 460px;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-  <div class="jumbotron">
-    <div class="container">
-      <h1>{% trans %}Teams{% endtrans %}</h1>
-    </div>
-  </div>
+<div class="ns-page">
+  <div class="ns-grid-bg"></div>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-12">
-        {% if q and field %}
-          <h5 class="text-muted text-center">
-            Searching for teams with <strong>{{ field }}</strong> matching <strong>{{ q }}</strong>
-          </h5>
-          <h6 class="text-muted text-center pb-3">
-            Page {{ teams.page }} of {{ teams.total }} results
-          </h6>
-        {% endif %}
-
-        {% with form = Forms.teams.PublicTeamSearchForm(field=field, q=q) %}
-          <form method="GET" class="row justify-content-around align-items-center">
-            <div class="mb-3 col-md-2">
-              {{ form.field(class="form-select w-100") }}
-            </div>
-
-            <div class="mb-3 col-md-8">
-              {{ form.q(class="form-control w-100", placeholder="Search for matching teams") }}
-            </div>
-
-            <div class="mb-3 col-md-2">
-              <button type="submit" class="btn btn-primary w-100">
-                <i class="fas fa-search" aria-hidden="true"></i>
-              </button>
-            </div>
-          </form>
-        {% endwith %}
+  <div>
+    <!-- Header Section -->
+    <div class="ns-header">
+      <div>
+        <div class="ns-header-badges">
+          <div class="ns-badge ns-badge-tertiary">SQUADS</div>
+          <span class="ns-badge-text">Team Registry</span>
+        </div>
+        <h1 class="ns-title ns-glitch-hover" data-text="TEAMS">{% trans %}TEAMS{% endtrans %}</h1>
       </div>
     </div>
 
-    <hr>
+    <!-- Search Section -->
+    <section class="ns-search-section">
+      {% if q and field %}
+        <div class="ns-search-info">
+          Searching for teams with <strong>{{ field }}</strong> matching <strong>{{ q }}</strong>
+        </div>
+        <div class="ns-search-meta">
+          Page {{ teams.page }} of {{ teams.total }} results
+        </div>
+      {% endif %}
 
-    <div class="row">
-      <div class="col-md-12">
-        <table class="table table-striped align-middle">
-          <thead>
-          <tr>
-            <th class="text-md-start">{% trans %}Team{% endtrans %}</th>
-            <th>{% trans %}Website{% endtrans %}</th>
-            <th class="d-none d-md-table-cell">{% trans %}Affiliation{% endtrans %}</th>
-            <th class="d-none d-md-table-cell">{% trans %}Country{% endtrans %}</th>
-          </tr>
-          </thead>
-          <tbody>
+      {% with form = Forms.teams.PublicTeamSearchForm(field=field, q=q) %}
+        <form method="GET" class="row justify-content-around align-items-center">
+          <div class="mb-3 col-md-2">
+            {{ form.field(class="form-select w-100", style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #e5e7eb; font-family: 'Space Mono', monospace; font-size: 12px;") }}
+          </div>
 
-          {% for team in teams.items %}
-            <tr>
-              <td>
-                {% if scores_visible() %}
-                  <a href="{{ url_for('teams.public', team_id=team.id) }}">{{ team.name | truncate(50) }}</a>
-                {% else %}
-                  <span>{{ team.name | truncate(50) }}</span>
-                {% endif %}
+          <div class="mb-3 col-md-8">
+            {{ form.q(class="form-control w-100", placeholder="Search for matching teams", style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #e5e7eb; font-family: 'Space Mono', monospace; font-size: 12px;") }}
+          </div>
 
-                {% if team.bracket_id %}
-                  <span class="badge bg-secondary ms-2">{{ team.bracket.name }}</span>
-                {% endif %}
+          <div class="mb-3 col-md-2">
+            <button type="submit" class="btn w-100"
+              style="background: var(--ns-primary); border: none; color: #000; font-family: 'Space Mono', monospace; font-weight: 700; letter-spacing: 1px;">
+              <i class="fas fa-search" aria-hidden="true"></i>
+            </button>
+          </div>
+        </form>
+      {% endwith %}
+    </section>
 
-                {% if team.oauth_id %}
-                  <a href="https://majorleaguecyber.org/t/{{ team.name }}">
-                    <span class="badge bg-primary ms-2">Official</span>
-                  </a>
-                {% endif %}
-              </td>
+    <!-- Teams Table -->
+    <div class="ns-rank-panel">
 
-              <td style="width: 10px;">
-                {% if team.website and (team.website.startswith('http://') or team.website.startswith('https://')) %}
-                  <a href="{{ team.website }}" target="_blank" rel="noopener">
-                    <i
-                        class="fas fa-external-link-alt"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        title="{{ team.website }}"
-                    ></i>
-                  </a>
-                {% endif %}
-              </td>
+      {% if teams.items %}
+        <div class="ns-rank-table-wrap">
+          <style>
+            .ns-team-row:hover {
+              background: rgba(255, 255, 255, 0.05) !important;
+              box-shadow: inset 0 0 0 1px rgba(0, 229, 208, 0.3), 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+              transform: translateY(-2px);
+            }
+            .ns-team-row:hover .ns-agent-name {
+              color: var(--ns-cyan) !important;
+              text-shadow: 0 0 15px rgba(0, 229, 208, 0.5);
+            }
+            .ns-team-row:hover .ns-agent-avatar {
+              box-shadow: 0 0 20px rgba(0, 229, 208, 0.3) !important;
+              border-color: rgba(0, 229, 208, 0.6) !important;
+              transform: scale(1.05);
+            }
+            .ns-agent-avatar {
+              transition: all 0.3s ease;
+            }
+          </style>
+          <table class="ns-rank-table w-100" style="border-collapse: separate; border-spacing: 0 8px;">
+            <thead>
+              <tr>
+                <th style="padding-left: 28px; color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Team{% endtrans %}</th>
+                <th style="color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Website{% endtrans %}</th>
+                <th class="d-none d-md-table-cell" style="color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Affiliation{% endtrans %}</th>
+                <th class="d-none d-md-table-cell" style="color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Country{% endtrans %}</th>
+              </tr>
+            </thead>
+            <tbody style="border-top: none;">
 
-              <td class="d-none d-md-table-cell">
-                {% if team.affiliation %}
+            {% for team in teams.items %}
+              <tr class="ns-team-row" style="background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05); animation-delay: {{ loop.index0 * 0.04 }}s;">
+                <td style="border: none; padding: 14px 20px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; vertical-align: middle;">
+                  <div class="ns-agent-cell d-flex align-items-center">
+                    <span class="ns-agent-avatar">
+                        <i class="fa-solid fa-users"></i>
+                      </span>
+                    <span class="ns-agent-info" style="margin-left: 16px;">
+                      <span class="d-flex align-items-center gap-2 flex-wrap">
+                        {% if scores_visible() %}
+                          <a href="{{ url_for('teams.public', team_id=team.id) }}" class="ns-agent-name text-decoration-none" style="font-weight: 600; font-size: 1.1rem; color: var(--ns-white); transition: all 0.3s ease; letter-spacing: 0.5px;">{{ team.name | truncate(50) }}</a>
+                        {% else %}
+                          <span class="ns-agent-name" style="font-weight: 600; font-size: 1.1rem; color: var(--ns-white); transition: all 0.3s ease; letter-spacing: 0.5px;">{{ team.name | truncate(50) }}</span>
+                        {% endif %}
 
-                  {% if team.affiliation | length > 50 %}
-                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ team.affiliation }}">
-                        {% if team.affiliation %}{{ team.affiliation | truncate(50) }}{% endif %}
+                        {% if team.bracket_id %}
+                          <span class="badge" style="background-color: rgba(255,255,255,0.05); color: var(--ns-gray-300); border: 1px solid rgba(255,255,255,0.1); font-family: var(--ns-mono); font-size: 0.65rem; letter-spacing: 1px; padding: 5px 8px; border-radius: 4px;">{{ team.bracket.name }}</span>
+                        {% endif %}
+
+                        {% if team.oauth_id %}
+                          <a href="https://majorleaguecyber.org/t/{{ team.name }}" class="badge text-decoration-none" style="background: linear-gradient(90deg, rgba(0,229,208,0.15) 0%, rgba(0,180,255,0.15) 100%); color: var(--ns-cyan); border: 1px solid rgba(0,229,208,0.3); font-family: var(--ns-mono); font-size: 0.65rem; letter-spacing: 1px; padding: 5px 8px; box-shadow: 0 0 10px rgba(0,229,208,0.1); border-radius: 4px;">Official</a>
+                        {% endif %}
+                      </span>
                     </span>
-                  {% else %}
-                    <span>
-                      {% if team.affiliation %}
-                        {{ team.affiliation | truncate(50) }}
-                      {% endif %}
-                    </span>
+                  </div>
+                </td>
+
+                <td class="ns-cell-website" style="border: none; padding: 14px 16px; vertical-align: middle;">
+                  {% if team.website and (team.website.startswith('http://') or team.website.startswith('https://')) %}
+                    <a href="{{ team.website }}" target="_blank" rel="noopener" style="color: var(--ns-cyan); font-size: 1.1rem; transition: all 0.2s ease;">
+                      <i
+                          class="fas fa-external-link-alt"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title="{{ team.website }}"
+                      ></i>
+                    </a>
                   {% endif %}
+                </td>
 
-                {% endif %}
-              </td>
+                <td class="d-none d-md-table-cell ns-cell-affiliation" style="border: none; padding: 14px 16px; vertical-align: middle; color: var(--ns-gray-300);">
+                  {% if team.affiliation %}
 
-              <td class="d-none d-md-table-cell">
-							<span>
-								{% if team.country %}
-                  <i class="flag-{{ team.country.lower() }}"></i>
-                  {{ lookup_country_code(team.country) }}
-                {% endif %}
-							</span>
-              </td>
-            </tr>
-          {% endfor %}
+                    {% if team.affiliation | length > 50 %}
+                      <span data-bs-toggle="tooltip" data-bs-placement="top" title="{{ team.affiliation }}">
+                          {% if team.affiliation %}{{ team.affiliation | truncate(50) }}{% endif %}
+                      </span>
+                    {% else %}
+                      <span>
+                        {% if team.affiliation %}
+                          {{ team.affiliation | truncate(50) }}
+                        {% endif %}
+                      </span>
+                    {% endif %}
 
-          </tbody>
-        </table>
-      </div>
+                  {% endif %}
+                </td>
+
+                <td class="d-none d-md-table-cell ns-cell-country" style="border: none; padding: 14px 20px 14px 16px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; vertical-align: middle; color: var(--ns-gray-300);">
+                  <span>
+                    {% if team.country %}
+                      <i class="flag-{{ team.country.lower() }} me-1"></i>
+                      {{ lookup_country_code(team.country) }}
+                    {% endif %}
+                  </span>
+                </td>
+              </tr>
+            {% endfor %}
+
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <div class="ns-empty">
+          {% trans %}No teams found{% endtrans %}
+        </div>
+      {% endif %}
     </div>
 
     {% if teams.pages > 1 %}
-      <div class="row">
-        <div class="col-md-12">
-          <div class="text-center">
-            {% trans %}Page{% endtrans %} <br>
+      <div class="ns-pagination">
+        <span class="ns-pagination-label">{% trans %}Page{% endtrans %}</span>
 
-            {% if teams.page != 1 %}
-              <a href="{{ prev_page }}">&lt;&lt;&lt;</a>
-            {% endif %}
+        {% if teams.page != 1 %}
+          <a href="{{ prev_page }}">&laquo;</a>
+        {% endif %}
 
-            <select class="page-select">
-              {% for page in range(1, teams.pages + 1) %}
-                <option {% if teams.page == page %}selected{% endif %}>{{ page }}</option>
-              {% endfor %}
-            </select>
+        <select class="page-select">
+          {% for page in range(1, teams.pages + 1) %}
+            <option {% if teams.page == page %}selected{% endif %}>{{ page }}</option>
+          {% endfor %}
+        </select>
 
-            {% if teams.next_num %}
-              <a href="{{ next_page }}">&gt;&gt;&gt;</a>
-            {% endif %}
-          </div>
-        </div>
+        {% if teams.next_num %}
+          <a href="{{ next_page }}">&raquo;</a>
+        {% endif %}
       </div>
     {% endif %}
 
   </div>
+</div>
 {% endblock %}
 
 {% block scripts %}

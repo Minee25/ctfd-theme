@@ -34,10 +34,10 @@
       --ns-panel-bg: #1c1f2e;
       --ns-panel-hover: #24283b;
       --ns-border-accent: #2a2e45;
-      --ns-primary: #d4ff2a;
-      --ns-primary-hover: #b5e500;
-      --ns-secondary: #ff4c79;
-      --ns-tertiary: #38e5d8;
+      --ns-primary: #00b4ff;
+      --ns-primary-hover: #0096e6;
+      --ns-secondary: #00e5d0;
+      --ns-tertiary: #4d94ff;
       --ns-text-light: #f8f8f8;
       --ns-text-muted: #8a8d9e;
     }
@@ -48,9 +48,9 @@
       color: var(--ns-text-light) !important;
       font-family: 'Space Grotesk', sans-serif !important;
       overflow-x: hidden;
-      background-image:
-        radial-gradient(circle at 80% 20%, rgba(56, 229, 216, 0.04) 0%, transparent 40%),
-        radial-gradient(circle at 20% 80%, rgba(255, 76, 121, 0.04) 0%, transparent 40%);
+      background-image: 
+        radial-gradient(circle at 80% 20%, rgba(0, 229, 208, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 20% 80%, rgba(0, 180, 255, 0.04) 0%, transparent 40%);
     }
 
     /* Navbar */
@@ -281,25 +281,24 @@
       margin-bottom: 2.5rem;
     }
 
-    /* Accent Color Variants */
     .ns-accent-0 {
-      --ns-accent: #38e5d8;
-      --ns-accent-rgb: 56, 229, 216;
+      --ns-accent: #00b4ff;
+      --ns-accent-rgb: 0, 180, 255;
     }
 
     .ns-accent-1 {
-      --ns-accent: #ff4c79;
-      --ns-accent-rgb: 255, 76, 121;
+      --ns-accent: #00e5d0;
+      --ns-accent-rgb: 0, 229, 208;
     }
 
     .ns-accent-2 {
-      --ns-accent: #d4ff2a;
-      --ns-accent-rgb: 212, 255, 42;
+      --ns-accent: #4d94ff;
+      --ns-accent-rgb: 77, 148, 255;
     }
 
     .ns-accent-3 {
-      --ns-accent: #f8f8f8;
-      --ns-accent-rgb: 248, 248, 248;
+      --ns-accent: #0077ff;
+      --ns-accent-rgb: 0, 119, 255;
     }
 
     .ns-category-header {
@@ -446,7 +445,7 @@
     .ns-card-completed {
       font-family: 'Space Mono', monospace;
       font-size: 0.75rem;
-      color: var(--ns-primary);
+      color: #00ff66;
       display: flex;
       align-items: center;
       gap: 0.25rem;
@@ -477,15 +476,15 @@
       left: 50%;
       transform: translate(-50%, -50%) rotate(-15deg);
       z-index: 20;
-      border: 4px solid var(--ns-primary);
-      color: var(--ns-primary);
+      border: 4px solid #00ff66;
+      color: #00ff66;
       font-family: 'Space Grotesk', sans-serif;
       font-weight: 700;
       font-size: 1.8rem;
       padding: 0.25rem 1rem;
       text-transform: uppercase;
       letter-spacing: 0.15em;
-      box-shadow: 0 0 10px rgba(212, 255, 42, 0.5);
+      box-shadow: 0 0 10px rgba(0, 255, 102, 0.5);
       background: rgba(15, 17, 26, 0.8);
       backdrop-filter: blur(4px);
       pointer-events: none;
@@ -918,12 +917,10 @@
   {{ Configs.theme_header }}
 </head>
 
-<body class="ns-site" data-route="{{ request.endpoint or '' }}">
-  <a class="visually-hidden-focusable position-fixed top-0 start-0 p-3 ns-skip-link" href="#main-content">{% trans %}Skip to content{% endtrans %}</a>
-  <div class="ns-global-grid" aria-hidden="true"></div>
+<body>
   {% include "components/navbar.html" %}
 
-  <main role="main" id="main-content">
+  <main role="main">
     {% block content %}
     {% endblock %}
   </main>
@@ -933,24 +930,11 @@
 
   {% include "components/notifications.html" %}
 
-  <footer class="ns-global-footer">
-    <div class="container">
-      <div><strong>NULL//SHIFT</strong><span>UNIVERSITY CYBER SECURITY ARENA</span></div>
-      <nav aria-label="Footer"><a href="{{ url_for('views.tos') }}">{% trans %}Rules{% endtrans %}</a><i></i><a href="{{ url_for('views.privacy') }}">{% trans %}Privacy{% endtrans %}</a></nav>
-      <small>POWERED BY <a href="https://ctfd.io" rel="noopener">CTFd</a></small>
-    </div>
-  </footer>
-
   {% block scripts %}
   {{ Assets.js("assets/js/page.js") }}
   {% endblock %}
 
-  {{ Assets.js("assets/js/pixel-ui.js") }}
-
   {{ Plugins.scripts }}
-
-  {{ Assets.css("assets/scss/upgrade.scss") }}
-  {{ Assets.css("assets/scss/balance.scss") }}
 
   {{ Configs.theme_footer }}
 </body>

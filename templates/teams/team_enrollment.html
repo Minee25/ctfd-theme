@@ -1,44 +1,83 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="jumbotron">
-    <div class="container">
-      <h1>{% trans %}Team{% endtrans %}</h1>
-    </div>
-  </div>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 offset-md-3 text-center">
-        <p class="h2">{% trans %}Welcome to{% endtrans %} {{ Configs.ctf_name }}!</p>
-        <p>
-          {% trans %}In order to participate you must either join or create a team.{% endtrans %}
-        </p>
-      </div>
-    </div>
+<div class="ns-page">
+  <div class="ns-grid-bg"></div>
 
-    {% if integrations.mlc() %}
-      <div class="row">
-        <div class="col-md-6 offset-md-3 text-center">
-          <a class="btn btn-primary w-100" href="{{ url_for('auth.oauth_login') }}">{% trans %}Play with Official Team{% endtrans %}</a>
-        </div>
+  <div class="ns-header">
+    <div class="container-fluid px-3">
+      <div class="ns-header-badges">
+        <div class="ns-badge ns-badge-tertiary">ENROLLMENT</div>
+        <span class="ns-badge-text">Required Action</span>
       </div>
-      <div class="row">
-        <div class="mt-3 col-md-3 offset-md-3 text-center">
-          <a class="btn btn-outline-info w-100" href="{{ url_for('teams.join') }}">{% trans %}Join Unofficial Team{% endtrans %}</a>
-        </div>
-        <div class="mt-3 col-md-3 text-center">
-          <a class="btn btn-outline-info w-100" href="{{ url_for('teams.new') }}">{% trans %}Create Unofficial Team{% endtrans %}</a>
-        </div>
-      </div>
-    {% else %}
-      <div class="row">
-        <div class="mt-3 col-sm-4 col-md-3 offset-sm-2 offset-md-3 text-center">
-          <a class="btn btn-primary w-100" href="{{ url_for('teams.join') }}">{% trans %}Join Team{% endtrans %}</a>
-        </div>
-        <div class="mt-3 col-sm-4 col-md-3 text-center">
-          <a class="btn btn-primary w-100" href="{{ url_for('teams.new') }}">{% trans %}Create Team{% endtrans %}</a>
-        </div>
-      </div>
-    {% endif %}
+      <h1 class="ns-title ns-glitch-hover" data-text="TEAM SELECTION">{% trans %}TEAM SELECTION{% endtrans %}</h1>
+    </div>
   </div>
+
+  <div class="container mt-4">
+    <div class="row">
+      <div class="col-md-8 col-lg-6 offset-md-2 offset-lg-3">
+        <div class="ns-rank-panel">
+          <div class="ns-terminal-bar">
+            <div class="ns-terminal-left">
+              <span class="ns-terminal-node">SYS_REQ // SQUAD_ENROLLMENT</span>
+              <span class="ns-terminal-secure" style="color: var(--ns-orange);">
+                <i class="fas fa-exclamation-triangle"></i> ACTION REQUIRED
+              </span>
+            </div>
+            <div class="ns-terminal-dots">
+              <div class="ns-t-dot ns-t-dot-red"></div>
+              <div class="ns-t-dot ns-t-dot-orange"></div>
+              <div class="ns-t-dot ns-t-dot-green"></div>
+            </div>
+          </div>
+
+          <div class="p-4 px-5 text-center">
+            <p style="font-family: var(--ns-display); font-size: 1.8rem; color: var(--ns-gray-100); margin-bottom: 1rem; margin-top: 1rem;">
+              {% trans %}Welcome to{% endtrans %} <strong style="color: var(--ns-cyan);">{{ Configs.ctf_name }}</strong>!
+            </p>
+            <p style="color: var(--ns-gray-300); margin-bottom: 2.5rem;">
+              {% trans %}In order to participate you must either join or create a team.{% endtrans %}
+            </p>
+
+            {% if integrations.mlc() %}
+              <div class="row mb-3">
+                <div class="col-12">
+                  <a href="{{ url_for('auth.oauth_login') }}" class="btn w-100" style="background: var(--ns-primary); border: none; color: #000; font-family: 'Space Mono', monospace; font-weight: 700; letter-spacing: 1px; padding: 12px; text-transform: uppercase; display: block;">
+                    <i class="fas fa-check-circle me-2"></i> {% trans %}Play with Official Team{% endtrans %}
+                  </a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                  <a href="{{ url_for('teams.join') }}" class="btn w-100" style="background: transparent; border: 1px solid var(--ns-cyan); color: var(--ns-cyan); font-family: 'Space Mono', monospace; font-weight: 400; letter-spacing: 1px; padding: 10px; text-transform: uppercase; display: block; transition: all 0.2s;">
+                    {% trans %}Join Unofficial Team{% endtrans %}
+                  </a>
+                </div>
+                <div class="col-md-6">
+                  <a href="{{ url_for('teams.new') }}" class="btn w-100" style="background: transparent; border: 1px solid var(--ns-cyan); color: var(--ns-cyan); font-family: 'Space Mono', monospace; font-weight: 400; letter-spacing: 1px; padding: 10px; text-transform: uppercase; display: block; transition: all 0.2s;">
+                    {% trans %}Create Unofficial Team{% endtrans %}
+                  </a>
+                </div>
+              </div>
+            {% else %}
+              <div class="row mt-4 mb-2">
+                <div class="col-md-6 mb-3 mb-md-0">
+                  <a href="{{ url_for('teams.join') }}" class="btn w-100" style="background: var(--ns-cyan); border: none; color: #000; font-family: 'Space Mono', monospace; font-weight: 700; letter-spacing: 1px; padding: 12px; text-transform: uppercase; display: block;">
+                    <i class="fas fa-sign-in-alt me-2"></i> {% trans %}Join Team{% endtrans %}
+                  </a>
+                </div>
+                <div class="col-md-6">
+                  <a href="{{ url_for('teams.new') }}" class="btn w-100" style="background: var(--ns-primary); border: none; color: #000; font-family: 'Space Mono', monospace; font-weight: 700; letter-spacing: 1px; padding: 12px; text-transform: uppercase; display: block;">
+                    <i class="fas fa-plus-circle me-2"></i> {% trans %}Create Team{% endtrans %}
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

@@ -1,41 +1,69 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="jumbotron">
-    <div class="container">
-      <h1>{% trans %}Create Team{% endtrans %}</h1>
+<div class="ns-page">
+  <div class="ns-grid-bg"></div>
+
+  <div class="ns-header">
+    <div class="container-fluid px-3">
+      <div class="ns-header-badges">
+        <div class="ns-badge ns-badge-tertiary">CREATE</div>
+        <span class="ns-badge-text">Initialize New Squad</span>
+      </div>
+      <h1 class="ns-title ns-glitch-hover" data-text="CREATE TEAM">{% trans %}CREATE TEAM{% endtrans %}</h1>
     </div>
   </div>
-  <div class="container">
+
+  <div class="container mt-4">
     <div class="row">
       <div class="col-md-6 offset-md-3">
         {% include "components/errors.html" %}
 
-        {% with form = Forms.teams.TeamRegisterForm() %}
-          {% from "macros/forms.html" import render_extra_fields %}
-          <form method="POST">
-            <div class="mb-3">
-              <b>{{ form.name.label(class="form-label") }}</b>
-              {{ form.name(class="form-control") }}
+        <div class="ns-rank-panel">
+          <div class="ns-terminal-bar">
+            <div class="ns-terminal-left">
+              <span class="ns-terminal-node">SYS_INIT // SQUAD</span>
+              <span class="ns-terminal-secure">
+                <i class="fas fa-plus-circle"></i> NEW_RECORD
+              </span>
             </div>
-            <div class="mb-3">
-              <b>{{ form.password.label(class="form-label") }}</b>
-              {{ form.password(class="form-control") }}
+            <div class="ns-terminal-dots">
+              <div class="ns-t-dot ns-t-dot-red"></div>
+              <div class="ns-t-dot ns-t-dot-orange"></div>
+              <div class="ns-t-dot ns-t-dot-green"></div>
             </div>
+          </div>
+          
+          <div class="p-4 px-5">
+            {% with form = Forms.teams.TeamRegisterForm() %}
+              {% from "macros/forms.html" import render_extra_fields %}
+              <form method="POST">
+                <div class="mb-4">
+                  <b style="font-family: var(--ns-mono); color: var(--ns-gray-300); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">{{ form.name.label(class="form-label mb-2") }}</b>
+                  {{ form.name(class="form-control", style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #e5e7eb; font-family: 'Space Mono', monospace; padding: 10px 15px;") }}
+                </div>
+                <div class="mb-4">
+                  <b style="font-family: var(--ns-mono); color: var(--ns-gray-300); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px;">{{ form.password.label(class="form-label mb-2") }}</b>
+                  {{ form.password(class="form-control", style="background-color: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #e5e7eb; font-family: 'Space Mono', monospace; padding: 10px 15px;") }}
+                </div>
 
-            {{ render_extra_fields(form.extra) }}
+                {{ render_extra_fields(form.extra) }}
 
-            <div class="row ">
-              <div class="col-md-12">
-                <p>After creating your team, share the team name and password with your teammates so they can join your
-                  team.</p>
-                {{ form.submit(class="btn btn-success float-end px-4") }}
-              </div>
-            </div>
-            {{ form.nonce() }}
-          </form>
-        {% endwith %}
+                <div class="row mt-5">
+                  <div class="col-md-12">
+                    <p style="color: var(--ns-gray-500); font-size: 0.85rem; text-align: center; margin-bottom: 1.5rem;">After creating your team, share the team name and password with your teammates so they can join your team.</p>
+                    <button type="submit" class="btn w-100" style="background: var(--ns-primary); border: none; color: #000; font-family: 'Space Mono', monospace; font-weight: 700; letter-spacing: 1px; padding: 12px; text-transform: uppercase;">
+                      <i class="fas fa-check-circle me-2"></i> CREATE TEAM
+                    </button>
+                  </div>
+                </div>
+                {{ form.nonce() }}
+              </form>
+            {% endwith %}
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>
 {% endblock %}

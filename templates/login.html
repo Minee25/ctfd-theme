@@ -1,61 +1,232 @@
 {% extends "base.html" %}
 
+{% block stylesheets %}
+{{ super() }}
+<style>
+  .ns-auth-page {
+    min-height: calc(100vh - 100px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    position: relative;
+  }
+
+  .ns-auth-frame {
+    width: 100%;
+    max-width: 460px;
+    background-color: var(--ns-panel-bg);
+    border-radius: 12px;
+    padding: 2rem;
+    border: 1px solid var(--ns-border-accent);
+    box-shadow: 
+      0 20px 40px rgba(0,0,0,0.4),
+      inset 0 1px 1px rgba(255,255,255,0.05);
+    position: relative;
+    z-index: 10;
+  }
+
+  .ns-auth-title {
+    font-family: var(--ns-display);
+    font-size: 2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--ns-text-light);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .ns-auth-subtitle {
+    font-family: var(--ns-mono);
+    font-size: 0.75rem;
+    color: var(--ns-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .ns-input-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .ns-input-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--ns-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--ns-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.5rem;
+  }
+
+  .ns-input-wrapper {
+    position: relative;
+  }
+
+  .ns-input-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--ns-text-muted);
+    font-size: 1.1rem;
+    pointer-events: none;
+    transition: color 0.2s;
+  }
+
+  .ns-cyber-input {
+    width: 100%;
+    background-color: #0d0f16;
+    border: 1px solid var(--ns-border-accent);
+    color: var(--ns-text-light);
+    font-family: var(--ns-mono);
+    font-size: 0.875rem;
+    padding: 0.875rem 1rem 0.875rem 2.75rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+  }
+
+  .ns-cyber-input:focus {
+    outline: none;
+    border-color: var(--ns-primary);
+    box-shadow: inset 0 0 10px rgba(0, 212, 255, 0.1);
+  }
+
+  .ns-cyber-input:focus + .ns-input-icon,
+  .ns-input-wrapper:focus-within .ns-input-icon {
+    color: var(--ns-primary);
+  }
+
+  .ns-auth-btn {
+    width: 100%;
+    background-color: var(--ns-primary);
+    color: #000;
+    font-family: var(--ns-mono);
+    font-weight: 700;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 1rem;
+    border: none;
+    border-radius: 6px;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+  }
+
+  .ns-auth-btn:hover {
+    background-color: var(--ns-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+  }
+
+  .ns-auth-link {
+    font-family: var(--ns-mono);
+    font-size: 0.75rem;
+    color: var(--ns-text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .ns-auth-link:hover {
+    color: var(--ns-primary);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .ns-glow-blob {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .blink {
+    animation: blinker 1s step-end infinite;
+  }
+  @keyframes blinker {
+    50% { opacity: 0; }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-  <div class="jumbotron">
-    <div class="container">
-      <h1>
-        {% trans %}Login{% endtrans %}
-      </h1>
+<div class="ns-auth-page">
+  <div class="ns-grid-bg"></div>
+  <div class="ns-glow-blob"></div>
+
+  <div class="ns-auth-frame">
+    <h1 class="ns-auth-title">
+      {% trans %}LOGIN{% endtrans %}<span class="text-info blink">_</span>
+    </h1>
+    <p class="ns-auth-subtitle">Provide credentials to enter the grid</p>
+
+    <div class="mb-4">
+      {% include "components/errors.html" %}
     </div>
-  </div>
 
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8 col offset-md-2 col-lg-6 offset-lg-3">
-        {% include "components/errors.html" %}
+    {% if integrations.mlc() %}
+      <a class="btn btn-secondary btn-lg btn-block w-100 mb-4" href="{{ url_for('auth.oauth_login') }}">
+        Login with Major League Cyber
+      </a>
+      <hr class="border-secondary mb-4">
+    {% endif %}
 
-        {% if integrations.mlc() %}
-          <a class="btn btn-secondary btn-lg btn-block w-100" href="{{ url_for('auth.oauth_login') }}">
-            Login with Major League Cyber
-          </a>
-
-          <hr>
-        {% endif %}
-
-        {% with form = Forms.auth.LoginForm() %}
-          <form method="post" accept-charset="utf-8">
-            <div class="mb-3">
-              <b>
-                {{ form.name.label(class="form-label") }}
-                <span class="text-danger">*</span>
-              </b>
-              {{ form.name(class="form-control", value=name, autocomplete="username email") }}
-            </div>
-
-            <div class="mb-3">
-              <b>
-                {{ form.password.label(class="form-label") }}
-                <span class="text-danger">*</span>
-              </b>
-              {{ form.password(class="form-control", value=password, autocomplete="current-password") }}
-            </div>
-
-            <div class="row pt-3">
-              <div class="col-6 col-md-8">
-                <a class="align-middle" href="{{ url_for('auth.reset_password') }}">
-                  {% trans %}Forgot your password?{% endtrans %}
-                </a>
-              </div>
-
-              <div class="col-6 col-md-4">
-                {{ form.submit(class="btn btn-block btn-primary w-100") }}
-              </div>
-            </div>
-
-            {{ form.nonce() }}
-          </form>
-        {% endwith %}
+    {% with form = Forms.auth.LoginForm() %}
+    <form method="post" accept-charset="utf-8">
+      
+      <div class="ns-input-group">
+        <div class="ns-input-label">
+          <span>{{ form.name.label.text }}</span>
+          <span class="text-danger">*</span>
+        </div>
+        <div class="ns-input-wrapper">
+          {{ form.name(class="ns-cyber-input", placeholder="Enter username", value=name, autocomplete="username email") }}
+        </div>
       </div>
-    </div>
+
+      <div class="ns-input-group">
+        <div class="ns-input-label">
+          <span>{{ form.password.label.text }}</span>
+          <span class="text-danger">*</span>
+        </div>
+        <div class="ns-input-wrapper">
+          {{ form.password(class="ns-cyber-input", placeholder="••••••••••••", value=password, autocomplete="current-password") }}
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-between mt-2">
+        <a href="{{ url_for('auth.reset_password') }}" class="ns-auth-link">
+          {% trans %}Forgot your password?{% endtrans %}
+        </a>
+      </div>
+
+      <button type="submit" class="ns-auth-btn group">
+        {% trans %}LOGIN{% endtrans %}
+        <i class="fas fa-arrow-right"></i>
+      </button>
+
+      {{ form.nonce() }}
+    </form>
+    {% endwith %}
   </div>
+</div>
 {% endblock %}

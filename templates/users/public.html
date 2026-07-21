@@ -1,91 +1,86 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <div class="jumbotron">
-    <div class="container">
-      <h1>{{ user.name }}</h1>
+<div class="ns-page">
+  <div class="ns-grid-bg"></div>
 
-      {% if user.team_id %}
-        <h2>
-          <a href="{{ url_for('teams.public', team_id=user.team_id) }}">
-            <span class="badge bg-secondary">
-              {{ user.team.name }}
+  <div class="ns-header">
+    <div class="container-fluid px-3">
+      <div class="ns-header-badges">
+        <div class="ns-badge ns-badge-tertiary">AGENT</div>
+        <span class="ns-badge-text">Public Profile</span>
+      </div>
+      <h1 id="user-id" class="ns-title ns-glitch-hover" data-ctfd-user-id="{{ user.id }}" data-text="{{ user.name }}" style="margin-bottom: 1.5rem;">{{ user.name }}</h1>
+
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        {% if user.team_id %}
+          <a href="{{ url_for('teams.public', team_id=user.team_id) }}" class="text-decoration-none">
+            <span class="ns-category-badge" style="border-color: rgba(255,59,122,0.3); background: rgba(255,59,122,0.1); color: var(--ns-pink);">
+              <i class="fas fa-users me-1"></i> {{ user.team.name }}
             </span>
           </a>
-        </h2>
-      {% endif %}
+        {% endif %}
 
-      <div class="pt-2">
         {% if user.oauth_id %}
-          <a href="https://majorleaguecyber.org/u/{{ user.name }}">
-            <h3 class="d-inline-block mx-1"><span class="badge rounded-pill bg-primary">{% trans %}Official{% endtrans %}</span></h3>
+          <a href="https://majorleaguecyber.org/u/{{ user.name }}" class="text-decoration-none">
+            <span class="ns-category-badge ns-accent-0">{% trans %}Official{% endtrans %}</span>
           </a>
         {% endif %}
 
         {% if user.affiliation %}
-          <h3 class="d-inline-block mx-1">
-            <span class="badge rounded-pill bg-primary">{{ user.affiliation }}</span>
-          </h3>
+          <span class="ns-category-badge ns-accent-1">{{ user.affiliation }}</span>
         {% endif %}
 
         {% if user.country %}
-          <h3 class="d-inline-block mx-1">
-            <span class="badge rounded-pill bg-primary">
-                <i class="flag-{{ user.country.lower() }}"></i>
-                {{ lookup_country_code(user.country) }}
-            </span>
-          </h3>
+          <span class="ns-category-badge ns-accent-2">
+            <i class="flag-{{ user.country.lower() }} me-1"></i>
+            {{ lookup_country_code(user.country) }}
+          </span>
+        {% endif %}
+
+        {% if user.bracket_id %}
+          <span class="ns-category-badge ns-accent-3">{{ user.bracket.name }}</span>
         {% endif %}
       </div>
 
-      {% if user.bracket_id %}
-        <div class="pt-2">
-          <h2>
-            <span class="badge text-bg-light">
-              {{ user.bracket.name }}
-            </span>
-          </h2>
+      {% if user.fields %}
+        <div class="mb-4 p-3 ns-rank-panel" style="display: inline-block; animation: none;">
+          {% for field in user.fields %}
+            <div style="font-family: var(--ns-mono); font-size: 0.85rem; color: var(--ns-gray-300);">
+              <span style="color: var(--ns-gray-500); text-transform: uppercase;">{{ field.name }}:</span> 
+              <span style="color: var(--ns-white);">{{ field.value }}</span>
+            </div>
+          {% endfor %}
         </div>
       {% endif %}
 
-      <div class="pt-2">
-        {% for field in user.fields %}
-          <h3 class="d-block">
-            {{ field.name }}: {{ field.value }}
-          </h3>
-        {% endfor %}
-      </div>
+      <div class="d-flex flex-wrap gap-4 mt-4">
+        <div class="ns-rank-panel p-3 px-4 d-flex flex-column justify-content-center align-items-center" style="min-width: 140px; animation: none;">
+          <span style="font-family: var(--ns-mono); font-size: 2.2rem; font-weight: 700; color: var(--ns-cyan); line-height: 1;">
+            {% if account.place %}{{ account.place }}{% else %}-{% endif %}
+          </span>
+          <span style="font-family: var(--ns-mono); font-size: 0.7rem; color: var(--ns-gray-500); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px;">{% trans %}Place{% endtrans %}</span>
+        </div>
+        
+        <div class="ns-rank-panel p-3 px-4 d-flex flex-column justify-content-center align-items-center" style="min-width: 140px; animation: none;">
+          <span style="font-family: var(--ns-mono); font-size: 2.2rem; font-weight: 700; color: var(--ns-primary); line-height: 1;">
+            {% if account.score %}{{ account.score }}{% else %}0{% endif %}
+          </span>
+          <span style="font-family: var(--ns-mono); font-size: 0.7rem; color: var(--ns-gray-500); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px;">{% trans %}Points{% endtrans %}</span>
+        </div>
 
-      {% if user.fields %}
-        <hr class="w-50 mx-auto">
-      {% endif %}
-
-      <div>
-        <h2 class="text-center">
-          {% if account.place %}
-            {{ account.place }} <small>place</small>
-          {% endif %}
-        </h2>
-        <h2 class="text-center">
-          {% if account.place %}
-            {{ account.score }} <small>points</small>
-          {% endif %}
-        </h2>
-      </div>
-
-      <div class="pt-3">
         {% if user.website %}
-          <a href="{{ user.website }}" target="_blank" style="color: inherit;" rel="noopener">
-            <i
-                class="fas fa-external-link-alt fa-2x px-2" data-toggle="tooltip" data-placement="top"
-                title="{{ user.website }}"
-            ></i>
-          </a>
+          <div class="d-flex align-items-center ms-auto">
+            <a href="{{ user.website }}" target="_blank" class="text-info" rel="noopener" style="font-size: 1.5rem; transition: color 0.2s;">
+              <i class="fas fa-external-link-alt" data-toggle="tooltip" data-placement="top" title="{{ user.website }}"></i>
+            </a>
+          </div>
         {% endif %}
       </div>
     </div>
   </div>
-  <div class="container">
+
+  <div class="container-fluid px-0">
     {% include "components/errors.html" %}
 
     {% set solves = user.solves %}
@@ -93,56 +88,97 @@
     {% if solves or awards %}
 
       {% if awards %}
-        <div class="row">
+        <div class="row mb-5 px-3">
           <div class="col-md-12">
-            <h3>{% trans %}Awards{% endtrans %}</h3>
+            <h3 class="ns-title" style="font-size: 1.5rem; margin-bottom: 1.5rem;">{% trans %}Awards{% endtrans %}</h3>
           </div>
           {% for award in awards %}
-            <div class="col-md-3 col-sm-6">
-              <p class="text-center">
-                <i class="award-icon award-{{ award.icon }} fa-2x"></i>
-                <br>
-                <strong>{{ award.name }}</strong>
-              </p>
-              <p class="text-center">{{ award.category or "" }}</p>
-              <p class="text-center">{{ award.description or "" }}</p>
-              <p class="text-center">{{ award.value }}</p>
+            <div class="col-md-3 col-sm-6 mb-3">
+              <div class="ns-rank-panel p-4 text-center h-100 d-flex flex-column justify-content-center">
+                <p>
+                  <i class="award-icon award-{{ award.icon }} fa-3x" style="color: var(--ns-cyan); filter: drop-shadow(0 0 10px rgba(0, 229, 208, 0.4));"></i>
+                  <br><br>
+                  <strong style="color: var(--ns-white); font-family: var(--ns-body); font-size: 1.1rem; letter-spacing: 0.5px;">{{ award.name }}</strong>
+                </p>
+                {% if award.category %}<p style="color: var(--ns-gray-500); font-family: var(--ns-mono); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">{{ award.category }}</p>{% endif %}
+                {% if award.description %}<p style="color: var(--ns-gray-300); font-size: 0.85rem;">{{ award.description }}</p>{% endif %}
+                <p style="color: var(--ns-accent); font-family: var(--ns-mono); font-weight: 700; margin-top: auto; margin-bottom: 0;">{{ award.value }}</p>
+              </div>
             </div>
           {% endfor %}
         </div>
       {% endif %}
 
-      <br>
+      <div class="row px-0 mx-0">
+        <div class="col-md-12 px-0">
+          <div class="ns-rank-panel">
+            <div class="ns-terminal-bar">
+              <div class="ns-terminal-dots">
+                <div class="ns-t-dot ns-t-dot-red"></div>
+                <div class="ns-t-dot ns-t-dot-orange"></div>
+                <div class="ns-t-dot ns-t-dot-green"></div>
+              </div>
+            </div>
 
-      <div class="row">
-        <div class="col-md-12">
-          <h3>Solves</h3>
-          <table class="table table-striped align-middle">
-            <thead>
-            <tr>
-              <th>{% trans %}Challenge{% endtrans %}</th>
-              <th class="d-none d-md-block d-lg-block">{% trans %}Category{% endtrans %}</th>
-              <th>{% trans %}Value{% endtrans %}</th>
-              <th>{% trans %}Time{% endtrans %}</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for solve in solves %}
-              <tr>
-                <td>
-                  <a href="{{ url_for('challenges.listing') }}#{{ solve.challenge.name }}-{{ solve.challenge.id }}">
-                    {{ solve.challenge.name }}
-                  </a>
-                </td>
-                <td class="d-none d-md-block d-lg-block">{{ solve.challenge.category }}</td>
-                <td>{{ solve.challenge.value }}</td>
-                <td class="solve-time">
-                  <span data-time="{{ solve.date | isoformat }}"></span>
-                </td>
-              </tr>
-            {% endfor %}
-            </tbody>
-          </table>
+            <div class="ns-rank-table-wrap">
+              <style>
+                .ns-solve-row:hover {
+                  background: rgba(255, 255, 255, 0.05) !important;
+                  box-shadow: inset 0 0 0 1px rgba(0, 229, 208, 0.3), 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+                }
+                .ns-solve-row:hover .ns-agent-name {
+                  color: var(--ns-cyan) !important;
+                  text-shadow: 0 0 15px rgba(0, 229, 208, 0.5);
+                }
+                .ns-solve-row:hover .ns-agent-avatar {
+                  box-shadow: 0 0 20px rgba(0, 229, 208, 0.3) !important;
+                  border-color: rgba(0, 229, 208, 0.6) !important;
+                }
+                .ns-agent-avatar {
+                  transition: all 0.1s ease;
+                }
+              </style>
+              <table class="ns-rank-table w-100" style="border-collapse: separate; border-spacing: 0 8px;">
+                <thead>
+                  <tr>
+                    <th style="padding-left: 28px; color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Challenge{% endtrans %}</th>
+                    <th class="d-none d-md-table-cell text-center" style="color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Category{% endtrans %}</th>
+                    <th class="text-right" style="text-align: right; padding-right: 32px; color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Value{% endtrans %}</th>
+                    <th class="text-center" style="color: var(--ns-gray-400); font-family: var(--ns-mono); letter-spacing: 2px; font-weight: 600; font-size: 0.75rem; border: none; text-transform: uppercase;">{% trans %}Time{% endtrans %}</th>
+                  </tr>
+                </thead>
+                <tbody style="border-top: none;">
+                {% for solve in solves %}
+                  <tr class="ns-solve-row" style="background: rgba(255, 255, 255, 0.02); transition: all 0.3s ease; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);">
+                    <td style="border: none; padding: 14px 20px; border-top-left-radius: 10px; border-bottom-left-radius: 10px; vertical-align: middle;">
+                      <div class="ns-agent-cell d-flex align-items-center">
+                        <span class="ns-agent-avatar d-flex align-items-center justify-content-center" style="border-color: rgba(0, 229, 208, 0.3); background: linear-gradient(135deg, rgba(0, 229, 208, 0.1) 0%, rgba(0, 180, 255, 0.1) 100%); color: var(--ns-cyan); width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(0, 229, 208, 0.2); flex-shrink: 0;">
+                          <i class="fas fa-flag" style="font-size: 1.1rem;"></i>
+                        </span>
+                        <span class="ns-agent-info" style="margin-left: 16px;">
+                          <a href="{{ url_for('challenges.listing') }}#{{ solve.challenge.name }}-{{ solve.challenge.id }}" class="ns-agent-name text-decoration-none" style="font-weight: 600; font-size: 1.1rem; color: var(--ns-white); transition: all 0.3s ease; letter-spacing: 0.5px;">
+                            {{ solve.challenge.name }}
+                          </a>
+                        </span>
+                      </div>
+                    </td>
+                    <td class="d-none d-md-table-cell text-center" style="border: none; padding: 14px 16px; vertical-align: middle;">
+                      <span class="badge" style="background-color: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--ns-gray-300); font-family: var(--ns-mono); letter-spacing: 1px; padding: 6px 10px; font-weight: 400; border-radius: 4px;">
+                        {{ solve.challenge.category }}
+                      </span>
+                    </td>
+                    <td class="ns-score-cell" style="border: none; padding: 14px 32px 14px 16px; font-family: var(--ns-mono); font-size: 1.25rem; font-weight: 700; color: var(--ns-primary); text-align: right; vertical-align: middle;">
+                      {{ solve.challenge.value }}
+                    </td>
+                    <td class="text-center" style="border: none; padding: 14px 20px 14px 16px; color: var(--ns-gray-400); font-family: var(--ns-mono); font-size: 0.85rem; border-top-right-radius: 10px; border-bottom-right-radius: 10px; vertical-align: middle;">
+                      <span data-time="{{ solve.date | isoformat }}"></span>
+                    </td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -150,35 +186,35 @@
 
       <div class="row" x-data="UserGraphs">
         <div class="col-md-6 d-none d-md-block d-lg-block py-4">
-          <div class="progress">
+          <div class="progress bg-dark">
             <div 
               class="progress-bar" 
               role="progressbar" 
-              :style="{ width: `${getSolvePercentage()}%`, 'background-color': 'rgb(0, 209, 64)' }" 
+              :style="{ width: `${getSolvePercentage()}%`, 'background-color': 'var(--ns-secondary)' }" 
             >
             </div>
             <div 
               class="progress-bar" 
               role="progressbar" 
-              :style="{ width: `${getFailPercentage()}%`, 'background-color': 'rgb(207, 38, 0)' }"
+              :style="{ width: `${getFailPercentage()}%`, 'background-color': 'var(--ns-border-accent)' }"
             >
             </div>
           </div>
-          <div class="ps-2 float-start">
+          <div class="ps-2 float-start text-white">
             <svg height="16" width="16">
-              <circle cx="8" cy="8" r="5" fill="rgb(0, 209, 64)" />
+              <circle cx="8" cy="8" r="5" fill="var(--ns-secondary)" />
             </svg>
             <small x-text="`Solves (${getSolvePercentage()}%)`"></small>
           </div>
-          <div class="ps-2 float-start">
+          <div class="ps-2 float-start text-white">
             <svg height="16" width="16">
-              <circle cx="8" cy="8" r="5" fill="rgb(207, 38, 0)" />
+              <circle cx="8" cy="8" r="5" fill="var(--ns-border-accent)" />
             </svg>
             <small x-text="`Fails (${getFailPercentage()}%)`"></small>
           </div>
         </div>
         <div class="col-md-6 d-none d-md-block d-lg-block py-4">
-          <div class="progress">
+          <div class="progress bg-dark">
             <template x-for="category in getCategoryBreakdown()" :key="category.name">
               <div 
                 class="progress-bar" 
@@ -189,7 +225,7 @@
             </template>
           </div>
           <template x-for="category in getCategoryBreakdown()" :key="category.name">
-            <div class="ps-2 float-start">
+            <div class="ps-2 float-start text-white">
               <svg height="16" width="16">
                 <circle cx="8" cy="8" r="5" :fill="category.color" />
               </svg>
@@ -202,7 +238,7 @@
 
         <div class="col-md-12 d-none d-md-block d-lg-block py-4">
           <div id="score-graph" x-ref="scoregraph" class="w-100 d-flex align-items-center">
-            <div class="text-center w-100">
+            <div class="text-center w-100 text-info">
               <i class="fas fa-circle-notch fa-spin fa-3x fa-fw spinner"></i>
             </div>
           </div>
@@ -210,12 +246,13 @@
       </div>
     {% else %}
       <div class="row min-vh-25">
-        <h3 class="opacity-50 text-center w-100 justify-content-center align-self-center">
+        <h3 class="opacity-50 text-center w-100 justify-content-center align-self-center text-white">
           {% trans %}No solves yet{% endtrans %}
         </h3>
       </div>
     {% endif %}
   </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
