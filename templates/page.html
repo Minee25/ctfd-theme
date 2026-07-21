@@ -857,7 +857,7 @@
           </div>
 
           <h1 class="ns-hero-title">
-            <span>CTFD</span>
+            <span>CTF</span>
             <span>MSU</span>
           </h1>
 
@@ -869,13 +869,12 @@
           <div class="ns-cta-row d-flex flex-wrap align-items-center">
             <a class="ns-primary-cta"
               href="{% if authed() %}{{ url_for('challenges.listing') }}{% elif registration_visible() %}{{ url_for('auth.register') }}{% else %}{{ url_for('auth.login') }}{% endif %}">
-              <span>Enter The Grid</span>
+              <span>Challenges</span>
               <i class="fas fa-arrow-right"></i>
             </a>
 
-            <a class="ns-secondary-cta" href="#briefing">
-              <span>How It Works</span>
-              <i class="fas fa-arrow-down"></i>
+            <a class="ns-secondary-cta" href="{{ url_for('auth.login') }}">
+              <span>{% trans %}Login{% endtrans %}</span>
             </a>
           </div>
         </div>
@@ -918,16 +917,15 @@
                   </a>
                   {% endif %}
 
-                  <a class="ns-card ns-card-yellow d-flex align-items-center position-relative" href="#briefing">
+                  <a class="ns-card ns-card-yellow d-flex align-items-center position-relative" href="{{ url_for('teams.private') }}">
                     <div class="d-flex align-items-center gap-3 w-100">
-                      <span class="ns-card-icon"><i class="fas fa-layer-group"></i></span>
+                      <span class="ns-card-icon"><i class="fas fa-users"></i></span>
                       <span class="d-flex flex-column">
-                        <span class="ns-card-label">คู่มือ</span>
-                        <span class="ns-card-heading">Field Guide</span>
-                        <span class="ns-card-sub">กติกา คำใบ้ และข้อมูลที่ต้องรู้</span>
+                        <span class="ns-card-label">จัดการทีม</span>
+                        <span class="ns-card-heading">Team</span>
+                        <span class="ns-card-sub">จัดการทีมและสมาชิกของคุณ</span>
                       </span>
-                      <span class="ns-card-arrow ms-auto"><i class="fas fa-arrow-down"></i></span>
-
+                      <span class="ns-card-arrow ms-auto"><i class="fas fa-arrow-right"></i></span>
                     </div>
                   </a>
                 </div>
@@ -942,8 +940,8 @@
                     <span class="ns-stat-value">{% if authed() %}AUTH{% else %}GUEST{% endif %}</span>
                   </div>
                   <div class="flex-grow-1 d-flex align-items-baseline gap-2">
-                    <span class="ns-stat-label">Status</span>
-                    <span class="ns-stat-value">99.9%</span>
+                    <span class="ns-stat-label">Network</span>
+                    <span class="ns-stat-value">SECURE</span>
                   </div>
                 </div>
 

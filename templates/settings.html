@@ -1,19 +1,202 @@
 {% extends "base.html" %}
 {% from "macros/forms.html" import render_extra_fields %}
 
-{% block content %}
-  <div class="jumbotron">
-    <div class="container">
-      <h1>
-        {% trans %}Settings{% endtrans %}
-      </h1>
-    </div>
-  </div>
+{% block stylesheets %}
+{{ super() }}
+<style>
+  :root {
+    --ns-bg: #0b0e1a;
+    --ns-panel: #0f1322;
+    --ns-soft-panel: rgba(255, 255, 255, 0.02);
+    --ns-accent: #00b4ff;
+    --ns-cyan: #00e5d0;
+    --ns-pink: #ff3b7a;
+    --ns-white: #ffffff;
+    --ns-gray-100: #e5e7eb;
+    --ns-gray-300: #9ca3af;
+    --ns-gray-500: #6b7280;
+    --ns-border: rgba(255, 255, 255, 0.06);
+    --ns-body: "Space Grotesk", "Noto Sans Thai", sans-serif;
+    --ns-display: "Inter", "Noto Sans Thai", sans-serif;
+    --ns-mono: "Space Mono", monospace;
+    --ns-primary: #00b4ff;
+  }
 
-  <div class="container">
+  .ns-page { min-height: 100vh; position: relative; z-index: 1; padding-bottom: 60px; }
+  .ns-grid-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+    background-color: var(--ns-bg);
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  
+  .ns-header {
+    padding-bottom: 60px;
+  }
+
+  .ns-header-badges {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 16px;
+  }
+
+  .ns-badge {
+    padding: 4px 10px; border-radius: 4px; font-family: var(--ns-mono);
+    font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+  }
+  .ns-badge-tertiary { background: rgba(0, 229, 208, 0.15); color: var(--ns-cyan); border: 1px solid rgba(0, 229, 208, 0.3); }
+  
+  .ns-badge-text {
+    color: var(--ns-gray-500); font-family: var(--ns-mono);
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+  }
+
+  .ns-title {
+    color: var(--ns-white); font-family: var(--ns-display);
+    font-size: 3rem; font-weight: 900; letter-spacing: -1px; text-transform: uppercase;
+    margin: 0;
+  }
+
+  .ns-panel {
+    background: var(--ns-panel);
+    border: 1px solid var(--ns-border);
+    border-radius: 8px;
+    padding: 32px;
+    color: var(--ns-gray-100);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  .nav-pills .nav-link {
+    color: var(--ns-gray-300);
+    font-family: var(--ns-mono);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    margin-bottom: 8px;
+    border: 1px solid var(--ns-border);
+  }
+  
+  .nav-pills .nav-link:hover {
+    background: rgba(255,255,255,0.05);
+    color: var(--ns-white);
+  }
+  
+  .nav-pills .nav-link.active {
+    background: var(--ns-primary) !important;
+    color: #000 !important;
+    font-weight: bold;
+  }
+  
+  /* Form Inputs */
+  .form-control, .form-select {
+    background-color: rgba(255,255,255,0.03) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    color: #ffffff !important;
+    font-family: var(--ns-mono);
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 6px;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    background-color: rgba(255,255,255,0.05) !important;
+    border-color: var(--ns-primary) !important;
+    box-shadow: 0 0 0 2px rgba(0, 180, 255, 0.2) !important;
+  }
+  
+  .form-label, b {
+    color: var(--ns-gray-300);
+    font-family: var(--ns-mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    display: inline-block;
+    font-weight: normal;
+  }
+  
+  .btn-primary {
+    background: var(--ns-primary) !important;
+    border: none !important;
+    color: #000 !important;
+    font-family: var(--ns-mono);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  
+  hr {
+    border-color: rgba(255,255,255,0.1);
+    margin: 24px 0;
+  }
+
+  .table {
+    color: var(--ns-gray-100);
+  }
+  .table th {
+    color: var(--ns-gray-500);
+    font-family: var(--ns-mono);
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 2px;
+    border-bottom: 1px solid var(--ns-border) !important;
+    background: transparent !important;
+  }
+  .table td {
+    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    font-family: var(--ns-mono);
+    font-size: 12px;
+    vertical-align: middle;
+    background: transparent !important;
+    color: var(--ns-gray-100);
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(255, 255, 255, 0.015) !important;
+  }
+
+  .modal-content {
+    background-color: var(--ns-panel);
+    border: 1px solid var(--ns-border);
+    color: var(--ns-gray-100);
+  }
+  .modal-header {
+    border-bottom: 1px solid var(--ns-border);
+  }
+  .modal-footer {
+    border-top: 1px solid var(--ns-border);
+  }
+  
+  .form-select option {
+    background-color: var(--ns-panel);
+    color: var(--ns-white);
+  }
+  .ns-container {
+    position: relative; 
+    z-index: 5;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ns-page">
+  <div class="ns-grid-bg"></div>
+
+  <div class="container ns-container">
+    <div class="ns-header">
+      <div>
+        <div class="ns-header-badges">
+          <div class="ns-badge ns-badge-tertiary">ACCOUNT</div>
+          <span class="ns-badge-text">Profile</span>
+        </div>
+        <h1 class="ns-title ns-glitch-hover" data-text="SETTINGS">{% trans %}SETTINGS{% endtrans %}</h1>
+      </div>
+    </div>
     <div class="row">
 
-      <div class="col-md-3 offset-md-1 mb-3 mb-md-0">
+      <div class="col-md-3 mb-3 mb-md-0">
         <div class="nav flex-column nav-pills" role="tablist">
           <button
               class="nav-link active" id="settings-profile-tab" data-bs-toggle="pill"
@@ -28,8 +211,8 @@
         </div>
       </div>
 
-      <div class="col-md-8">
-        <div class="tab-content" id="v-pills-tabContent">
+      <div class="col-md-9">
+        <div class="ns-panel tab-content" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="profile" role="tabpanel">
             {% include "components/errors.html" %}
 
@@ -111,8 +294,8 @@
                   </template>
                 </div>
 
-                <div class="mb-3">
-                  {{ form.submit(class="btn btn-primary float-end px-4") }}
+                <div class="mb-3 text-end">
+                  {{ form.submit(class="btn btn-primary px-4") }}
                 </div>
               </form>
             {% endwith %}
@@ -169,10 +352,8 @@
                   {{ form.description(class="form-control", rows="3") }}
                 </div>
 
-                <div class="row">
-                  <div class="col">
-                    {{ form.submit(class="btn btn-block btn-primary float-end px-4") }}
-                  </div>
+                <div class="mb-3 text-end">
+                  {{ form.submit(class="btn btn-primary px-4") }}
                 </div>
               </form>
             {% endwith %}
@@ -259,6 +440,7 @@
       </div>
     </div>
   </div>
+</div>
 {% endblock %}
 
 {% block scripts %}
