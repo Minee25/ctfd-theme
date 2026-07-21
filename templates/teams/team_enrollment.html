@@ -19,12 +19,6 @@
       <div class="col-md-8 col-lg-6 offset-md-2 offset-lg-3">
         <div class="ns-rank-panel">
           <div class="ns-terminal-bar">
-            <div class="ns-terminal-left">
-              <span class="ns-terminal-node">SYS_REQ // SQUAD_ENROLLMENT</span>
-              <span class="ns-terminal-secure" style="color: var(--ns-orange);">
-                <i class="fas fa-exclamation-triangle"></i> ACTION REQUIRED
-              </span>
-            </div>
             <div class="ns-terminal-dots">
               <div class="ns-t-dot ns-t-dot-red"></div>
               <div class="ns-t-dot ns-t-dot-orange"></div>
@@ -63,7 +57,7 @@
             {% else %}
               <div class="row mt-4 mb-2">
                 <div class="col-md-6 mb-3 mb-md-0">
-                  <a href="{{ url_for('teams.join') }}" class="btn w-100" style="background: var(--ns-cyan); border: none; color: #000; font-family: 'Space Mono', monospace; font-weight: 700; letter-spacing: 1px; padding: 12px; text-transform: uppercase; display: block;">
+                  <a href="{{ url_for('teams.join') }}" class="btn w-100" style="background: var(--ns-cyan); border: 2px solid #fff; color: #fff; font-family: 'Space Mono', monospace; font-weight: 700; letter-spacing: 1px; padding: 10px; text-transform: uppercase; display: block;">
                     <i class="fas fa-sign-in-alt me-2"></i> {% trans %}Join Team{% endtrans %}
                   </a>
                 </div>
